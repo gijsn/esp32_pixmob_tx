@@ -64,12 +64,6 @@ int ColorIndex = 0, BitDuration = 500;
 #define ValidValuesCount 4
 #define BytesCount 12
 
-void MicrosDelay(unsigned long m) {
-  unsigned long n = micros();
-  while (micros() - n < m)
-    yield;
-}
-
 std::array<byte, BytesCount> ByteArray;
 std::array<std::array<int, BytesCount>, ValidValuesCount> ColorArrayArray{{
     {0xaa, 0xaa, 0x65, 0x21, 0x24, 0x6d, 0x61, 0x23, 0x11, 0x61, 0x2b, 0x40},  // gold_fade_in
@@ -96,12 +90,12 @@ void ByteArraySend(void) {
   for (int j = 0; j < sizeof(ByteArray); j++)
     for (int i = 0; i < 8; i++) {
       digitalWrite(RADIO_DIO_2_PORT, (128U & ByteArray[j]) / 128U);
-      MicrosDelay(BitDuration);
+      delayMicroseconds(BitDuration);
       ByteArray[j] <<= 1;
     }
   digitalWrite(RADIO_DIO_2_PORT, 0);
   for (int k = 0; k < 8; k++)
-    MicrosDelay(BitDuration);
+    delayMicroseconds(BitDuration);
 }
 
 void setup() {
